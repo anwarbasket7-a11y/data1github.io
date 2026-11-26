@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absensi Siswa MAN 1 Kota Cirebon</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eaf3ef;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #aaa;
+}
+
+header {
+    background: #087b50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+header h2 {
+    margin: 5px;
+}
+
+.identitas, .form-data {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    margin: 3px;
+}
+
+.tambah { background: #087b50; }
+.cetak { background: #1769aa; }
+.hapus { background: #dc3545; }
+.edit { background: #e49b16; }
+.reset { background: #555; }
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    min-width: 850px;
+}
+
+th {
+    background: #087b50;
+    color: white;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background: #f1f8f4;
+}
+
+.rekap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.kartu {
+    background: #e3f3e9;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.kartu h3 {
+    margin: 5px;
+    color: #087b50;
+}
+
+@media print {
+    body { background: white; padding: 0; }
+    .container { box-shadow: none; }
+    .no-print { display: none !important; }
+    table { font-size: 11px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h2>APLIKASI DATA ABSENSI SISWA</h2>
+<h3>MAN 1 KOTA CIREBON</h3>
+<p>Administrasi Kehadiran Peserta Didik</p>
+</header>
+
+<h3>IDENTITAS KELAS DAN WALI KELAS</h3>
+
+<div class="identitas">
+    <div>
+        <label>Nama Wali Kelas</label>
+        <input id="wali" placeholder="Nama wali kelas">
+    </div>
+    <div>
+        <label>Kelas</label>
+        <input id="kelas" placeholder="Contoh: X A">
+    </div>
+    <div>
+        <label>Tahun Pelajaran</label>
+        <input id="tahunAjaran" placeholder="2026/2027">
+    </div>
+</div>
+
+<hr>
+
+<h3>FORM INPUT ABSENSI SISWA</h3>
+
+<div class="form-data">
+    <div>
+        <label>Nomor</label>
+        <input type="number" id="nomor" placeholder="Nomor siswa">
+    </div>
+
+    <div>
+        <label>Nama Siswa</label>
+        <input type="text" id="nama" placeholder="Nama lengkap">
+    </div>
+
+    <div>
+        <label>Jenis Kelamin</label>
+        <select id="jk">
+            <option value="">Pilih</option>
+            <option value="Laki-laki">Laki-laki</option>
+            <option value="Perempuan">Perempuan</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Tanggal</label>
+        <select id="tanggal"></select>
+    </div>
+
+    <div>
+        <label>Bulan</label>
+        <select id="bulan">
+            <option value="Januari">Januari</option>
+            <option value="Februari">Februari</option>
+            <option value="Maret">Maret</option>
+            <option value="April">April</option>
+            <option value="Mei">Mei</option>
+            <option value="Juni">Juni</option>
+            <option value="Juli">Juli</option>
+            <option value="Agustus">Agustus</option>
+            <option value="September">September</option>
+            <option value="Oktober">Oktober</option>
+            <option value="November">November</option>
+            <option value="Desember">Desember</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Tahun</label>
+        <input type="number" id="tahun">
+    </div>
+
+    <div>
+        <label>Keterangan</label>
+        <select id="ket">
+            <option value="Hadir">Hadir</option>
+            <option value="Sakit">Sakit</option>
+            <option value="Izin">Izin</option>
+            <option value="Alpa">Alpa</option>
+        </select>
+    </div>
+</div>
+
+<div class="no-print">
+    <button class="tambah" onclick="simpan()">SIMPAN DATA</button>
+    <button class="reset" onclick="bersihkan()">RESET FORM</button>
+    <button class="cetak" onclick="window.print()">CETAK LAPORAN</button>
+</div>
+
+<hr>
+
+<h3>REKAPITULASI KEHADIRAN</h3>
+
+<div class="rekap">
+    <div class="kartu">
+        <h3 id="total">0</h3>
+        Total Data
+    </div>
+    <div class="kartu">
+        <h3 id="hadir">0</h3>
+        Hadir
+    </div>
+    <div class="kartu">
+        <h3 id="sakit">0</h3>
+        Sakit
+    </div>
+    <div class="kartu">
+        <h3 id="izin">0</h3>
+        Izin
+    </div>
+    <div class="kartu">
+        <h3 id="alpa">0</h3>
+        Alpa
+    </div>
+</div>
+
+<h3>TABEL DATA ABSENSI SISWA</h3>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+    <th>No</th>
+    <th>Nama Siswa</th>
+    <th>Jenis Kelamin</th>
+    <th>Tanggal</th>
+    <th>Bulan</th>
+    <th>Tahun</th>
+    <th>Keterangan</th>
+    <th class="no-print">Aksi</th>
+</tr>
+</thead>
+<tbody id="tabel"></tbody>
+</table>
+</div>
+
+<p><b>Wali Kelas:</b> <span id="namaWali">-</span></p>
+<p><b>Kelas:</b> <span id="namaKelas">-</span></p>
+
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("absensiMAN1")) || [];
+let editIndex = -1;
+
+const el = id => document.getElementById(id);
+
+for (let i = 1; i <= 31; i++) {
+    el("tanggal").innerHTML +=
+        `<option value="${i}">${i}</option>`;
+}
+
+const sekarang = new Date();
+el("tanggal").value = sekarang.getDate();
+el("bulan").value = [
+"Januari","Februari","Maret","April","Mei","Juni",
+"Juli","Agustus","September","Oktober","November","Desember"
+][sekarang.getMonth()];
+el("tahun").value = sekarang.getFullYear();
+
+["wali","kelas","tahunAjaran"].forEach(id => {
+    el(id).value = localStorage.getItem("identitas_"+id) || "";
+    el(id).addEventListener("input", simpanIdentitas);
+});
+
+function simpanIdentitas() {
+    ["wali","kelas","tahunAjaran"].forEach(id => {
+        localStorage.setItem("identitas_"+id, el(id).value);
+    });
+    renderIdentitas();
+}
+
+function renderIdentitas() {
+    el("namaWali").textContent = el("wali").value || "-";
+    el("namaKelas").textContent = el("kelas").value || "-";
+}
+
+function simpan() {
+    let nomor = el("nomor").value;
+    let nama = el("nama").value.trim();
+    let jk = el("jk").value;
+
+    if (!nomor || !nama || !jk) {
+        alert("Nomor, nama, dan jenis kelamin wajib diisi!");
+        return;
+    }
+
+    let siswa = {
+        nomor, nama, jk,
+        tanggal: el("tanggal").value,
+        bulan: el("bulan").value,
+        tahun: el("tahun").value,
+        ket: el("ket").value
+    };
+
+    if (editIndex === -1) {
+        data.push(siswa);
+    } else {
+        data[editIndex] = siswa;
+        editIndex = -1;
+    }
+
+    localStorage.setItem("absensiMAN1", JSON.stringify(data));
+    bersihkan();
+    tampilkan();
+}
+
+function tampilkan() {
+    el("tabel").innerHTML = "";
+
+    data.forEach((d, i) => {
+        el("tabel").innerHTML += `
+        <tr>
+            <td>${i+1}</td>
+            <td>${aman(d.nama)}</td>
+            <td>${aman(d.jk)}</td>
+            <td>${aman(d.tanggal)}</td>
+            <td>${aman(d.bulan)}</td>
+            <td>${aman(d.tahun)}</td>
+            <td>${aman(d.ket)}</td>
+            <td class="no-print">
+                <button class="edit" onclick="ubah(${i})">Edit</button>
+                <button class="hapus" onclick="hapus(${i})">Hapus</button>
+            </td>
+        </tr>`;
+    });
+
+    el("total").textContent = data.length;
+    el("hadir").textContent = data.filter(d=>d.ket==="Hadir").length;
+    el("sakit").textContent = data.filter(d=>d.ket==="Sakit").length;
+    el("izin").textContent = data.filter(d=>d.ket==="Izin").length;
+    el("alpa").textContent = data.filter(d=>d.ket==="Alpa").length;
+}
+
+function aman(teks) {
+    return String(teks).replace(/[&<>"']/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;",
+        '"':"&quot;", "'":"&#39;"
+    })[c]);
+}
+
+function ubah(i) {
+    let d = data[i];
+    el("nomor").value = d.nomor;
+    el("nama").value = d.nama;
+    el("jk").value = d.jk;
+    el("tanggal").value = d.tanggal;
+    el("bulan").value = d.bulan;
+    el("tahun").value = d.tahun;
+    el("ket").value = d.ket;
+    editIndex = i;
+    window.scrollTo(0, 0);
+}
+
+function hapus(i) {
+    if (confirm("Yakin ingin menghapus data ini?")) {
+        data.splice(i, 1);
+        localStorage.setItem("absensiMAN1", JSON.stringify(data));
+        tampilkan();
+    }
+}
+
+function bersihkan() {
+    el("nomor").value = "";
+    el("nama").value = "";
+    el("jk").value = "";
+    el("ket").value = "Hadir";
+    editIndex = -1;
+}
+
+renderIdentitas();
+tampilkan();
+</script>
+
+</body>
+</html>
